@@ -4,7 +4,9 @@ from release_audit import (
     build_summary,
     count_high_priority_tickets,
     count_open_tickets,
+    load_config,
     load_tickets,
+    main,
 )
 
 
@@ -55,6 +57,79 @@ def test_build_summary_reports_all_counts():
         "open": 2,
         "high_priority": 2,
     }
+
+
+def test_load_config_reads_json_file(tmp_path):
+    config_file = tmp_path / "config.json"
+    config_file.write_text(
+        '{"data_file": "tickets.txt", "high_priority_threshold": 4}',
+        encoding="utf-8",
+    )
+
+    result = load_config(config_file)
+
+    assert result == {
+        "data_file": "tickets.txt",
+        "high_priority_threshold": 4,
+    }
+
+
+def test_load_config_reads_json(tmp_path):
+    # Arrange
+    config_file = tmp_path / "config.json"
+
+    config_file.write_text(
+        """
+        {
+          "data_file": "tickets.txt",
+          "report_title": "Support Ticket Summary",
+          "high_priority_threshold": 4
+        }
+        """,
+        encoding="utf-8"
+    )
+
+    expected = {
+        "data_file": "tickets.txt",
+        "report_title": "Support Ticket Summary",
+        "high_priority_threshold": 4
+    }
+
+    # Act
+    result = load_config(config_file)
+
+    # Assert
+    assert result == expected
+
+
+def test_main_uses_configuration(monkeypatch, capsys):
+    requested_files = []
+    tickets = [
+        {"id": "T-301", "status": "open", "priority": 2},
+        {"id": "T-302", "status": "closed", "priority": 7},
+    ]
+
+    monkeypatch.setattr(
+        "release_audit.load_config",
+        lambda filename: {
+            "data_file": "custom-tickets.txt",
+            "report_title": "Configured Report",
+            "high_priority_threshold": 7,
+        },
+    )
+
+    def fake_load_tickets(filename):
+        requested_files.append(filename)
+        return tickets
+
+    monkeypatch.setattr("release_audit.load_tickets", fake_load_tickets)
+
+    main()
+
+    output = capsys.readouterr().out
+    assert requested_files == ["custom-tickets.txt"]
+    assert "Configured Report" in output
+    assert "High-priority tickets: 1" in output
 
 
 def test_load_tickets_reads_valid_file(tmp_path):
