@@ -16,38 +16,38 @@ Open PowerShell and run:
 
 1. Clone the repository:
 
-   ```powershell
+   
    git clone https://github.com/az6u/CPS310-ICA08-DevOps.git
-   ```
+   
 
 2. Change to the project directory:
 
-   ```powershell
+   powershell
    cd CPS310-ICA08-DevOps
-   ```
+   
 
 3. Create a virtual environment named `.venv`:
 
-   ```powershell
+   powershell
    py -3.12 -m venv .venv
-   ```
+   
 
 4. Activate the virtual environment:
 
-   ```powershell
+   powershell
    .\.venv\Scripts\Activate.ps1
-   ```
+   
 
 5. Install the project dependencies:
 
-   ```powershell
+   powershell
    python -m pip install -r requirements.txt
-   ```
+   
 
 ## Run
 
 With the virtual environment activated, run:
 
-```powershell
+powershell
 python release_audit.py
-```
+
