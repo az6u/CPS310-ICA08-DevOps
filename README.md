@@ -1,16 +1,11 @@
-# TaskTrack
+# Release Audit
 
-TaskTrack is a command-line task manager created for CPS 310.
+Small Python program for displaying support-ticket information.
 
-## Current Features
+## Run
 
--View Tasks that have been created 
--Add tasks to your list to be viewed
+```text
+python release_audit.py
+```
 
-## Running the Program
-
-in order to ru this task you need to open terminal and run python tasktrack.py
-
-## Current Limitation
-
-when prompted to close the program with 3 the menu will display a goodbye message confirming that you have terminated the program.
+More setup information will be added later.
